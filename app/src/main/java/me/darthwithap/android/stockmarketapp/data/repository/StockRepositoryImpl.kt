@@ -2,8 +2,10 @@ package me.darthwithap.android.stockmarketapp.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import me.darthwithap.android.stockmarketapp.data.csv.CsvParser
 import me.darthwithap.android.stockmarketapp.data.local.StockDatabase
 import me.darthwithap.android.stockmarketapp.data.mapper.toCompanyListing
+import me.darthwithap.android.stockmarketapp.data.mapper.toEntity
 import me.darthwithap.android.stockmarketapp.data.remote.StockApi
 import me.darthwithap.android.stockmarketapp.domain.model.CompanyListing
 import me.darthwithap.android.stockmarketapp.domain.repository.StockRepository
@@ -16,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class StockRepositoryImpl @Inject constructor(
   val api: StockApi,
-  val db: StockDatabase
+  val db: StockDatabase,
+  val parser: CsvParser<CompanyListing>
 ) : StockRepository {
 
   private val stockDao = db.dao
@@ -32,9 +35,7 @@ class StockRepositoryImpl @Inject constructor(
 
       // Always load from cache first
       val localListings = stockDao.searchCompanyListing(query)
-      emit(Result.Success(
-        data = localListings.map { it.toCompanyListing() }
-      ))
+      emit(Result.Success(localListings.map { it.toCompanyListing() }))
 
       //check if we only have to fetch from db
       val isDbEmpty = localListings.isEmpty() && query.isBlank()
@@ -49,11 +50,28 @@ class StockRepositoryImpl @Inject constructor(
       // If not onlyFromCache, fetchFromApi
       val remoteListings = try {
         val apiResponse = api.getListings()
+        parser.parse(apiResponse.byteStream())
       } catch (e: IOException) {
         e.printStackTrace()
         emit(Result.Error("Couldn't load data"))
+        null
       } catch (e: HttpException) {
         emit(Result.Error("Couldn't load data"))
+        null
+      }
+
+      remoteListings?.let { listings ->
+        //Clear Cache before inserting newly fetched data
+        stockDao.clearCompanyListings()
+        stockDao.insertCompanyListings(
+          listings.map { it.toEntity() })
+
+        //Single source of truth for our UI, always emit data from the cache
+        emit(Result.Success(
+          data = stockDao.searchCompanyListing("")
+            .map { it.toCompanyListing() }
+        ))
+        emit(Result.Loading(false))
       }
     }
   }

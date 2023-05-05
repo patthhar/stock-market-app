@@ -13,15 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 
+@RootNavGraph(start = true)
+@Destination
 @Composable
-@Destination(start = true)
 fun CompanyListingsScreen(
-  navigator: DestinationsNavigator,
+  navController: NavController,
   viewModel: CompanyListingsViewModel = hiltViewModel()
 ) {
   val swipeRefreshState = rememberSwipeRefreshState(
@@ -50,7 +52,8 @@ fun CompanyListingsScreen(
             modifier = Modifier
               .fillMaxWidth()
               .clickable {
-                // TODO: Navigate to CompanyInfo Screen
+                // TODO: Improve this navigation with navArgs
+                //navController.navigate(Screens.CompanyInfo.route)
               }
               .padding(16.dp)
           )

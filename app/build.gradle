@@ -42,6 +42,14 @@ android {
     }
   }
 
+  applicationVariants.all { variant ->
+    kotlin.sourceSets {
+      getByName(variant.name) {
+        kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+      }
+    }
+  }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -84,6 +92,7 @@ dependencies {
   implementation AndroidX.composeUi
   implementation AndroidX.composeMaterial
   implementation AndroidX.composeActivity
+  implementation AndroidX.composeNavigation
   implementation AndroidX.composePaging
   implementation AndroidX.composeUiToolingPreview
   implementation AndroidX.composeLifecycleViewModel

@@ -25,10 +25,8 @@ object AndroidX {
 
 
   //Dagger - Hilt
-  const val hiltLifecycleViewModel =
-    "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hiltLifecycleViewModel}"
-  const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hilt}"
-  const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:${Versions.hilt}"
+  const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltAndroid}"
+  const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:${Versions.hiltAndroid}"
 
   // Kotlin Extensions and Coroutines support for Room
   const val roomKtx = "androidx.room:room-ktx:${Versions.room}"

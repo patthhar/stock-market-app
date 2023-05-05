@@ -23,8 +23,8 @@ object Dependencies {
   const val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
 
   //Dagger - Hilt
-  const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hiltAndroid}"
-  const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hiltAndroid}"
+  const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hilt}"
+  const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hilt}"
 
   // Compose Nav Destinations
   const val composeDestinationsCore =

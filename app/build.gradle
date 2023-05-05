@@ -99,7 +99,6 @@ dependencies {
   //Dagger - Hilt
   implementation Dependencies.hiltAndroid
   kapt Dependencies.hiltAndroidCompiler
-  implementation AndroidX.hiltLifecycleViewModel
   kapt AndroidX.hiltCompiler
   implementation AndroidX.hiltNavigationCompose
 
